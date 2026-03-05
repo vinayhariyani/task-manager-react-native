@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { Task } from '../types/task';
 import { saveTasks, loadTasks } from '../services/storageService';
 import { SyncOperation } from '../types/sync';
+import { triggerSync } from '../services/syncService';
 
 interface TaskState {
   tasks: Task[];
@@ -32,6 +33,7 @@ export const useTaskStore = create<TaskState>(set => ({
       // we gets task from user Interaction
       const updatedTasks = [...state.tasks, task]; // we update state in Zustand
       saveTasks(updatedTasks); // we save it to storage
+      triggerSync(); // Manual sync if network is available
       return {
         tasks: updatedTasks,
         syncQueue: [
@@ -48,6 +50,7 @@ export const useTaskStore = create<TaskState>(set => ({
         task.id === updatedTask.id ? updatedTask : task,
       );
       saveTasks(updatedTasks);
+      triggerSync();
       return {
         tasks: updatedTasks,
         syncQueue: [
@@ -61,6 +64,7 @@ export const useTaskStore = create<TaskState>(set => ({
     set(state => {
       const updatedTasks = state.tasks.filter(task => task.id !== id);
       saveTasks(updatedTasks);
+      triggerSync();
       return {
         tasks: updatedTasks,
         syncQueue: [...state.syncQueue, { type: 'DELETE', taskId: id }],
@@ -74,6 +78,7 @@ export const useTaskStore = create<TaskState>(set => ({
       );
       const updatedTask = updatedTasks.find(task => task.id === id);
       saveTasks(updatedTasks);
+      triggerSync();
       return {
         tasks: updatedTasks,
         syncQueue: [

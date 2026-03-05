@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, Button, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useTaskStore } from '../store/taskStore';
 import { Task } from '../types/task';
 
@@ -41,12 +41,26 @@ export default function TaskFormScreen({ navigation, route }: any) {
         style={styles.input}
       />
 
-      <Button title="Set Priority Low" onPress={() => setPriority('Low')} />
-      <Button
-        title="Set Priority Medium"
+      <TouchableOpacity
+        style={[styles.priorityButton, priority === 'Low' && styles.priorityLow]}
+        onPress={() => setPriority('Low')}
+      >
+        <Text style={styles.priorityText}>Low</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.priorityButton, priority === 'Medium' && styles.priorityMedium]}
         onPress={() => setPriority('Medium')}
-      />
-      <Button title="Set Priority High" onPress={() => setPriority('High')} />
+      >
+        <Text style={styles.priorityText}>Medium</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.priorityButton, priority === 'High' && styles.priorityHigh]}
+        onPress={() => setPriority('High')}
+      >
+        <Text style={styles.priorityText}>High</Text>
+      </TouchableOpacity>
 
       <Button title="Save Task" onPress={handleSave} />
     </View>
@@ -62,5 +76,25 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 20,
     padding: 10,
+  },
+  priorityButton: {
+    padding: 15,
+    marginBottom: 10,
+    borderRadius: 8,
+    backgroundColor: '#e0e0e0',
+    alignItems: 'center',
+  },
+  priorityText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  priorityLow: {
+    backgroundColor: '#4caf50',
+  },
+  priorityMedium: {
+    backgroundColor: '#ff9800',
+  },
+  priorityHigh: {
+    backgroundColor: '#f44336',
   },
 });
