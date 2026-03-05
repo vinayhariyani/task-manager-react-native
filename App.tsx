@@ -1,45 +1,39 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import TaskListScreen from './src/screens/TaskListScreen';
+import TaskFormScreen from './src/services/TaskFormScreen';
+import { startSyncListener } from './src/services/syncService';
+import { useTaskStore } from './src/store/taskStore';
+import { StyleSheet, Text } from 'react-native';
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+const Stack = createNativeStackNavigator();
 
-  return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
-  );
-}
+export default function App() {
+  const syncStatus = useTaskStore(state => state.syncStatus);
 
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
+  useEffect(() => {
+    startSyncListener();
+  }, []);
 
   return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
+    <>
+      <Text style={styles.syncStatus}>Sync Status: {syncStatus}</Text>
+
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Tasks" component={TaskListScreen} />
+          <Stack.Screen name="TaskForm" component={TaskFormScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  syncStatus: {
+    textAlign: 'center',
+    padding: 10,
   },
 });
-
-export default App;
