@@ -29,13 +29,15 @@ export const useTaskStore = create<TaskState>(set => ({
 
   addTask: task =>
     set(state => {
-      const updatedTasks = [...state.tasks, task];
-      saveTasks(updatedTasks);
+      // we gets task from user Interaction
+      const updatedTasks = [...state.tasks, task]; // we update state in Zustand
+      saveTasks(updatedTasks); // we save it to storage
       return {
         tasks: updatedTasks,
         syncQueue: [
+          // we add operation to sync queue
           ...state.syncQueue,
-          { type: 'CREATE', taskId: task.id, task },
+          { type: 'CREATE', taskId: task.id, task }, // we create operation and add to queue
         ],
       };
     }),
@@ -45,9 +47,7 @@ export const useTaskStore = create<TaskState>(set => ({
       const updatedTasks = state.tasks.map(task =>
         task.id === updatedTask.id ? updatedTask : task,
       );
-
       saveTasks(updatedTasks);
-
       return {
         tasks: updatedTasks,
         syncQueue: [
@@ -60,9 +60,7 @@ export const useTaskStore = create<TaskState>(set => ({
   deleteTask: id =>
     set(state => {
       const updatedTasks = state.tasks.filter(task => task.id !== id);
-
       saveTasks(updatedTasks);
-
       return {
         tasks: updatedTasks,
         syncQueue: [...state.syncQueue, { type: 'DELETE', taskId: id }],
@@ -74,11 +72,8 @@ export const useTaskStore = create<TaskState>(set => ({
       const updatedTasks = state.tasks.map(task =>
         task.id === id ? { ...task, completed: !task.completed } : task,
       );
-
       const updatedTask = updatedTasks.find(task => task.id === id);
-
       saveTasks(updatedTasks);
-
       return {
         tasks: updatedTasks,
         syncQueue: [

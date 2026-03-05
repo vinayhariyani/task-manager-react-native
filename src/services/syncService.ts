@@ -3,6 +3,7 @@ import { useTaskStore } from '../store/taskStore';
 
 export const startSyncListener = () => {
   NetInfo.addEventListener(async state => {
+    // gives either device is offline or has network
     const { syncQueue, clearSyncQueue, setSyncStatus } =
       useTaskStore.getState();
 
@@ -22,7 +23,7 @@ export const startSyncListener = () => {
       await mockApiCall(operation);
     }
 
-    clearSyncQueue();
+    clearSyncQueue(); // clear sync Queue after synching the data to server/mockapi
     setSyncStatus('synced');
   });
 };
@@ -40,7 +41,6 @@ const mockApiCall = async (operation: any, retries = 3) => {
       console.log('Retrying sync...');
       return mockApiCall(operation, retries - 1);
     }
-
     throw error;
   }
 };

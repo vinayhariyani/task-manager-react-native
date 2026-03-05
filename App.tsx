@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import TaskListScreen from './src/screens/TaskListScreen';
-import TaskFormScreen from './src/services/TaskFormScreen';
+import TaskFormScreen from './src/screens/TaskFormScreen';
 import { startSyncListener } from './src/services/syncService';
 import { useTaskStore } from './src/store/taskStore';
 import { StyleSheet, Text } from 'react-native';
